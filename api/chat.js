@@ -3,10 +3,10 @@ export default async function handler(req, res) {
   try {
 
     if (req.method !== "POST") {
-      return res.status(200).json({ mensaje: "Usa POST" });
+      return res.status(200).json({ ok: true, msg: "Usa POST" });
     }
 
-    const { mensaje } = req.body || {};
+    const mensaje = req.body?.mensaje;
 
     if (!mensaje) {
       return res.status(400).json({ error: "Falta mensaje" });
@@ -23,7 +23,7 @@ export default async function handler(req, res) {
         messages: [
           {
             role: "system",
-            content: "Eres un técnico experto en reparación de computadores. Respondes claro y ayudas a diagnosticar problemas."
+            content: "Eres un técnico experto en reparación de computadores."
           },
           {
             role: "user",
@@ -35,13 +35,13 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
-    res.status(200).json({
-      respuesta: data.choices?.[0]?.message?.content || "Error en respuesta IA"
+    return res.status(200).json({
+      respuesta: data?.choices?.[0]?.message?.content || "Sin respuesta IA"
     });
 
   } catch (error) {
-    res.status(500).json({
-      error: "Error interno",
+    return res.status(500).json({
+      error: "Fallo interno",
       detalle: error.message
     });
   }
