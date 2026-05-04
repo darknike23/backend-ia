@@ -1,50 +1,101 @@
-body{
-  font-family: Arial;
-  background:#0f172a;
-  color:white;
-  margin:0;
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: #fff;
 }
 
-header{
-  text-align:center;
-  padding:25px;
-  background:linear-gradient(90deg,#0ea5e9,#22c55e);
+.header {
+  text-align: center;
+  padding: 20px;
+  background: #111827;
+  border-bottom: 1px solid #1f2937;
 }
 
-.chat-container{
-  margin:20px;
-  background:#111827;
-  padding:20px;
-  border-radius:12px;
+.chat-container {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
 }
 
-#chatbox{
-  height:300px;
-  overflow:auto;
-  background:black;
-  padding:10px;
-  margin-bottom:10px;
-  border-radius:10px;
+#chatbox {
+  height: 420px;
+  overflow-y: auto;
+  background: #1e293b;
+  padding: 15px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-input{
-  width:70%;
-  padding:10px;
+/* mensajes */
+.msg {
+  padding: 10px 14px;
+  border-radius: 12px;
+  max-width: 80%;
+  animation: fadeIn 0.2s ease-in;
+  word-wrap: break-word;
 }
 
-button{
-  padding:10px;
-  background:#22c55e;
-  border:none;
-  cursor:pointer;
+.user {
+  background: #2563eb;
+  align-self: flex-end;
 }
 
-.wsp{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  background:#25D366;
-  padding:15px;
-  border-radius:50%;
-  text-decoration:none;
+.bot {
+  background: #22c55e;
+  align-self: flex-start;
+  color: black;
+}
+
+/* input */
+.input-area {
+  display: flex;
+  margin-top: 10px;
+  gap: 10px;
+}
+
+input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+}
+
+button {
+  padding: 12px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+
+/* whatsapp */
+.wsp {
+  display: block;
+  text-align: center;
+  margin: 20px;
+  color: #22c55e;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+/* animación */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
