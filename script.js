@@ -1,13 +1,12 @@
-function sendMessage(){
+function sendMessage() {
 
   const input = document.getElementById("userInput");
   const chat = document.getElementById("chatbox");
 
   const text = input.value;
-  if(!text) return;
+  if (!text) return;
 
   chat.innerHTML += "<p>👤 " + text + "</p>";
-
   input.value = "";
 
   fetch("https://backend-ia-rf8e.vercel.app/api/chat", {
