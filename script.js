@@ -25,16 +25,19 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
-    console.log(data); // 👈 IMPORTANTE PARA VER ERROR REAL
+    // 🔥 DEBUG REAL
+    console.log(JSON.stringify(data));
 
-    if (!data.choices || !data.choices[0]) {
+    const respuesta = data?.choices?.[0]?.message?.content;
+
+    if (!respuesta) {
       return res.status(500).json({
-        error: data.error || "Error en OpenAI"
+        error: data.error?.message || "No llegó respuesta de OpenAI"
       });
     }
 
     return res.status(200).json({
-      respuesta: data.choices[0].message.content
+      respuesta: respuesta
     });
 
   } catch (err) {
