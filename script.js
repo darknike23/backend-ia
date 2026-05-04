@@ -1,9 +1,9 @@
 function sendMessage(){
 
-  let input = document.getElementById("userInput");
-  let chat = document.getElementById("chatbox");
+  const input = document.getElementById("userInput");
+  const chat = document.getElementById("chatbox");
 
-  let text = input.value;
+  const text = input.value;
   if(!text) return;
 
   chat.innerHTML += "<p>👤 " + text + "</p>";
@@ -21,8 +21,8 @@ function sendMessage(){
   .then(data => {
     chat.innerHTML += "<p style='color:#22c55e'>🤖 " + data.respuesta + "</p>";
   })
-  .catch(err => {
-    chat.innerHTML += "<p style='color:red'>Error conexión</p>";
+  .catch(() => {
+    chat.innerHTML += "<p style='color:red'>Error de conexión</p>";
   });
 
 }
