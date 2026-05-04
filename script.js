@@ -1,27 +1,45 @@
-function sendMessage() {
+export default async function handler(req, res) {
 
-  const input = document.getElementById("userInput");
-  const chat = document.getElementById("chatbox");
+  try {
 
-  const text = input.value;
-  if (!text) return;
+    const mensaje = req.body?.mensaje;
 
-  chat.innerHTML += "<p>👤 " + text + "</p>";
-  input.value = "";
+    if (!mensaje) {
+      return res.status(400).json({ error: "Falta mensaje" });
+    }
 
-  fetch("https://backend-ia-rf8e.vercel.app/api/chat", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ mensaje: text })
-  })
-  .then(res => res.json())
-  .then(data => {
-    chat.innerHTML += "<p style='color:#22c55e'>🤖 " + data.respuesta + "</p>";
-  })
-  .catch(() => {
-    chat.innerHTML += "<p style='color:red'>Error de conexión</p>";
-  });
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + process.env.OPENAI_API_KEY,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [
+          { role: "system", content: "Eres técnico experto en PCs." },
+          { role: "user", content: mensaje }
+        ]
+      })
+    });
 
+    const data = await response.json();
+
+    console.log(data); // 👈 IMPORTANTE PARA VER ERROR REAL
+
+    if (!data.choices || !data.choices[0]) {
+      return res.status(500).json({
+        error: data.error || "Error en OpenAI"
+      });
+    }
+
+    return res.status(200).json({
+      respuesta: data.choices[0].message.content
+    });
+
+  } catch (err) {
+    return res.status(500).json({
+      error: err.message
+    });
+  }
 }
