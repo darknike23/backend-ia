@@ -2,10 +2,6 @@ export default async function handler(req, res) {
 
   try {
 
-    if (req.method !== "POST") {
-      return res.status(200).json({ ok: true, msg: "Usa POST" });
-    }
-
     const mensaje = req.body?.mensaje;
 
     if (!mensaje) {
@@ -21,28 +17,28 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: "gpt-4o-mini",
         messages: [
-          {
-            role: "system",
-            content: "Eres un técnico experto en reparación de computadores."
-          },
-          {
-            role: "user",
-            content: mensaje
-          }
+          { role: "system", content: "Eres técnico experto en PCs." },
+          { role: "user", content: mensaje }
         ]
       })
     });
 
     const data = await response.json();
 
+    // 🔥 MOSTRAR ERROR REAL
+    if (data.error) {
+      return res.status(500).json({
+        error: data.error.message
+      });
+    }
+
     return res.status(200).json({
-      respuesta: data?.choices?.[0]?.message?.content || "Sin respuesta IA"
+      respuesta: data.choices[0].message.content
     });
 
-  } catch (error) {
+  } catch (err) {
     return res.status(500).json({
-      error: "Fallo interno",
-      detalle: error.message
+      error: err.message
     });
   }
 }
