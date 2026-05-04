@@ -5,7 +5,7 @@ async function sendMessage(){
 
   chat.innerHTML += "<p>👤 " + input + "</p>";
 
-  let res = await fetch("https://TU-BACKEND.vercel.app/api/chat", {
+  let res = await fetch("https://backend-ia-rf8e.vercel.app/api/chat", {
     method:"POST",
     headers:{
       "Content-Type":"application/json"
