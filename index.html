@@ -2,28 +2,29 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Técnico IA</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<header>
+<header class="header">
   <h1>💻 Técnico IA</h1>
-  <p>Diagnóstico inteligente de computadores</p>
+  <p>Soporte inteligente para computadores</p>
 </header>
 
 <div class="chat-container">
 
   <div id="chatbox"></div>
 
-  <input id="userInput" placeholder="Escribe tu problema aquí">
-  <button onclick="sendMessage()">Enviar</button>
+  <div class="input-area">
+    <input id="userInput" placeholder="Escribe tu problema..." autocomplete="off">
+    <button onclick="sendMessage()">Enviar</button>
+  </div>
 
 </div>
 
-<a class="wsp" href="https://wa.me/56945239128" target="_blank">
-💬 WhatsApp
-</a>
+<a class="wsp" href="https://wa.me/56945239128" target="_blank">💬 WhatsApp</a>
 
 <script src="script.js"></script>
 
