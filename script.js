@@ -3,7 +3,7 @@ function sendMessage() {
   const input = document.getElementById("userInput");
   const chat = document.getElementById("chatbox");
 
-  const text = input.value;
+  const text = input.value.trim();
   if (!text) return;
 
   chat.innerHTML += "<p>👤 " + text + "</p>";
