@@ -25,23 +25,28 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
-    // 🔥 MOSTRAR ERROR REAL SI EXISTE
+    // 🔥 DEBUG REAL (IMPORTANTE)
+    console.log("OPENAI RESPONSE:", data);
+
+    // ❗ SI HAY ERROR
     if (data.error) {
       return res.status(500).json({
         error: data.error.message
       });
     }
 
-    // 🔥 VALIDACIÓN FUERTE
-    if (!data.choices || !data.choices[0]) {
+    // ❗ VALIDACIÓN SEGURA
+    const respuesta = data?.choices?.[0]?.message?.content;
+
+    if (!respuesta) {
       return res.status(500).json({
-        error: "OpenAI no devolvió respuesta válida",
+        error: "Respuesta vacía de OpenAI",
         debug: data
       });
     }
 
     return res.status(200).json({
-      respuesta: data.choices[0].message.content
+      respuesta
     });
 
   } catch (err) {
