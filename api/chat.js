@@ -24,7 +24,7 @@ export default async function handler(req, res) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: "gpt-3.5-turbo",
         messages: [
           { role: "system", content: "Eres técnico experto en PCs." },
           { role: "user", content: mensaje }
