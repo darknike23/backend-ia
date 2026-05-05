@@ -1,54 +1,45 @@
-export default async function handler(req, res) {
 
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+function sendMessage() {
 
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
+  const input = document.getElementById("userInput");
+  const chat = document.getElementById("chatbox");
 
-  try {
+  const text = input.value.trim();
+  if (!text) return;
 
-    const mensaje = req.body?.mensaje;
+  // Mostrar mensaje del usuario
+  chat.innerHTML += "<p>👤 " + text + "</p>";
+  input.value = "";
 
-    if (!mensaje) {
-      return res.status(400).json({ error: "Falta mensaje" });
+  // Scroll automático al final
+  chat.scrollTop = chat.scrollHeight;
+
+  fetch("https://backend-ia-rf8e.vercel.app/api/chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ mensaje: text })
+  })
+
+  .then(res => res.json())
+  .then(data => {
+
+    // ❌ Mostrar error real si existe
+    if (data.error) {
+      chat.innerHTML += "<p style='color:red'>❌ " + data.error + "</p>";
+      return;
     }
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": "Bearer " + process.env.OPENAI_API_KEY,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [
-          { role: "system", content: "Eres técnico experto en PCs." },
-          { role: "user", content: mensaje }
-        ]
-      })
-    });
+    // 🤖 Respuesta normal del bot
+    chat.innerHTML += "<p>🤖 " + (data.respuesta || "Sin respuesta") + "</p>";
 
-    const data = await response.json();
+    // Scroll automático
+    chat.scrollTop = chat.scrollHeight;
+  })
 
-    console.log("OPENAI RESPONSE:", data);
+  .catch(err => {
+    chat.innerHTML += "<p style='color:red'>❌ Error de conexión con el servidor</p>";
+  });
 
-    if (!response.ok) {
-      return res.status(500).json({
-        error: data.error?.message || "Error desconocido en OpenAI",
-        full: data
-      });
-    }
-
-    return res.status(200).json({
-      respuesta: data.choices?.[0]?.message?.content
-    });
-
-  } catch (err) {
-    return res.status(500).json({
-      error: err.message
-    });
-  }
 }
