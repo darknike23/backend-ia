@@ -1,27 +1,54 @@
-function sendMessage() {
+export default async function handler(req, res) {
 
-  const input = document.getElementById("userInput");
-  const chat = document.getElementById("chatbox");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  const text = input.value.trim();
-  if (!text) return;
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
 
-  chat.innerHTML += "<p>👤 " + text + "</p>";
-  input.value = "";
+  try {
 
-  fetch("https://backend-ia-rf8e.vercel.app/api/chat", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ mensaje: text })
-  })
-  .then(res => res.json())
-  .then(data => {
-    chat.innerHTML += "<p>🤖 " + (data.respuesta || "Sin respuesta") + "</p>";
-  })
-  .catch(() => {
-    chat.innerHTML += "<p style='color:red'>Error de conexión</p>";
-  });
+    const mensaje = req.body?.mensaje;
 
+    if (!mensaje) {
+      return res.status(400).json({ error: "Falta mensaje" });
+    }
+
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + process.env.OPENAI_API_KEY,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [
+          { role: "system", content: "Eres técnico experto en PCs." },
+          { role: "user", content: mensaje }
+        ]
+      })
+    });
+
+    const data = await response.json();
+
+    console.log("OPENAI RESPONSE:", data);
+
+    if (!response.ok) {
+      return res.status(500).json({
+        error: data.error?.message || "Error desconocido en OpenAI",
+        full: data
+      });
+    }
+
+    return res.status(200).json({
+      respuesta: data.choices?.[0]?.message?.content
+    });
+
+  } catch (err) {
+    return res.status(500).json({
+      error: err.message
+    });
+  }
 }
